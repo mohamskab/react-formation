@@ -5,7 +5,6 @@ import {
     CardBody,
     CardHeader,
     Container,
-    Form,
     Input,
     Modal,
     ModalBody,
@@ -32,7 +31,7 @@ const Geologie = ()=> {
     const toggle = useCallback(() => {
         if (modalDialog) {
             setModalDialog(false);
-            setObjetGeologie(null);
+            setObjetGeologie({});
         } else {
             setModalDialog(true);
         }
@@ -60,7 +59,12 @@ const Geologie = ()=> {
     }, [toggle]);
 
     function handleSubmit() {
-
+        if (objetGeologie.lithologie !== undefined) {
+            setGeologieList([...geologieList, objetGeologie]);
+            toggle();
+        } else {
+            alert("La ne doiveent pas être null !")
+        }
     }
 
     function handleDelete(item) {
@@ -81,8 +85,7 @@ const Geologie = ()=> {
                                     type="button"
                                     className="btn btn-success add-btn"
                                     id="create-btn"
-                                    onClick={() => handleAddClicks()} >
-                                    <i className="ri-add-line align-bottom me-1"/> Ajouter
+                                    onClick={() => handleAddClicks()} > Ajouter
                                 </button>{" "}
                             </div>
                         </div>
@@ -96,7 +99,7 @@ const Geologie = ()=> {
                                     <th>Lithologie</th>
                                     <th>Groupe</th>
                                     <th>Description</th>
-                                    <th>Action</th>
+                                    <th className="text-center">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -107,7 +110,7 @@ const Geologie = ()=> {
                                         <td>{item.groupe}</td>
                                         <td>{item.description}</td>
                                         <td>
-                                            <div className="hstack gap-3 flex-wrap">
+                                            <div className="text-center">
                                                 <Button color="success" size="sm" className="me-1"
                                                         onClick={() => {
                                                             handleUpdateClick(item);
@@ -129,7 +132,7 @@ const Geologie = ()=> {
             <Modal id="createForm" isOpen={modalDialog} toggle={toggle} modalClassName="zoomIn" centered tabIndex="-1">
                 <ModalHeader toggle={toggle} className="p-3 bg-soft-success"> {!!isEdit ? "Modification d'une géologie" : "Création d'une géologie"} </ModalHeader>
                 <ModalBody>
-                    <Form onSubmit={handleSubmit}>
+                    <form>
                         <div className="mb-3">
                             <label htmlFor="groupe-input" className="form-label">Groupe</label>
                             <Input
@@ -176,13 +179,14 @@ const Geologie = ()=> {
                             />
                         </div>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-ghost-success" onClick={() => setModalDialog(false)}>
-                                <i className="ri-close-fill align-bottom"/>
+                            <Button color="primary" outline onClick={() => setModalDialog(false)}>
                                 Fermer
-                            </button>
-                            <button type="submit" className="btn btn-primary" id="addGeologie">{!isEdit ? "Enregistrer" : "Modifier"}</button>
+                            </Button>
+                            <Button color="success" id="addGeologie" onClick={()=> handleSubmit() }>
+                                {!isEdit ? "Enregistrer" : "Modifier"}
+                            </Button>
                         </div>
-                    </Form>
+                    </form>
                 </ModalBody>
             </Modal>
         </>
